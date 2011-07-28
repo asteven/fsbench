@@ -92,10 +92,9 @@ restore_fstab() {
 
 profile_dir=$__base_dir/profiles/$profile
 [ -d "$profile_dir" ] || die "Profile directory does not exist: $profile_dir"
-[ -x "$profile_dir/setup" ] && "$profile_dir/setup" || true
-
 export device=$(cat "$profile_dir/device")
 export mount_point=$(cat "$profile_dir/mount_point")
+[ -x "$profile_dir/setup" ] && "$profile_dir/setup" || true
 
 output_dir=$output/$profile
 [ -d "$output_dir" ] || mkdir -p "$output_dir"
