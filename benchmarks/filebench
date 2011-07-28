@@ -9,6 +9,6 @@ echo 0 > /proc/sys/kernel/randomize_va_space
 filebench << DONE
 load fileserver
 set \$dir=$mount_point
-set \$meanfilesize=50000000
 run 60
 DONE
+#set \$meanfilesize=50000000
