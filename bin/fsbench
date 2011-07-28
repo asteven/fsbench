@@ -63,7 +63,7 @@ while [ $# -gt 0 ]; do
          shift 2
       ;;
       -*)
-         die "Unkown argument: $1"
+         die "Unknown argument: $1"
       ;;
    esac
 done
