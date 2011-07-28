@@ -33,7 +33,8 @@ output/              # directory where benchmark reports are written to
 
 
 == getting started ==
-cp -a profiles/cbrg-fs profiles/test
+cd /path/to/fsbench
+mkdir profiles/test
 echo /dev/sda3 > profiles/test/device
 echo /mnt/test > profiles/test/mount_point
 cat > profiles/test/setup << DONE
