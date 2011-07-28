@@ -113,6 +113,7 @@ for benchcase in $benchcases; do
    export benchcase
 
    benchcase_dir=$__base_dir/benchcases/$benchcase
+   [ -d "$benchcase_dir" ] || die "Benchcase directory does not exist: $benchcase_dir"
 
    # setup
    [ -x "$benchcase_dir/setup" ] && "$benchcase_dir/setup" || true
