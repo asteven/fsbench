@@ -108,7 +108,7 @@ benchmark_script=$__base_dir/benchmarks/$benchmark
 [ -e "$benchmark_script" ] || die "Benchmark script does not exist: $benchmark_script"
 [ -x "$benchmark_script" ] || die "Benchmark script is not executable: $benchmark_script"
 
-umount "$mount_point" || true
+umount "$mount_point" 2>&1 > /dev/null || true
 
 for benchcase in $benchcases; do
    export benchcase
