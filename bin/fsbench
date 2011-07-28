@@ -92,6 +92,9 @@ cp /etc/fstab "$fstab_backup"
 trap restore_fstab EXIT 
 restore_fstab() {
    cp "$fstab_backup" /etc/fstab
+}
+trap cleanup EXIT 
+cleanup() {
    rm -f "$fstab_backup"
 }
 
