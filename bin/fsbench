@@ -25,6 +25,8 @@ Options:
                               one of: $(ls -x "$__base_dir/benchmarks")
     -p|--profile string    which profile to use for preparing the benchmark run
                               one of: $(ls -x "$__base_dir/profiles")
+    -o|--output string     output directory for benchmark results
+                              defaults to $__base_dir/output
 EOS
 }
 
@@ -36,11 +38,6 @@ die() {
 debug() {
    [ "$debug" ] && echo "$@" >&2
 }
-
-debug=
-profile=
-benchmark=
-benchcases=
 
 # Parse command line arguments
 while [ $# -gt 0 ]; do
@@ -61,6 +58,10 @@ while [ $# -gt 0 ]; do
          benchmark="$2"
          shift 2
       ;;
+      -o|--output)
+         output="$2"
+         shift 2
+      ;;
    esac
 done
 
@@ -70,6 +71,10 @@ done
 benchcases="$@"
 [ -n "$benchcases" ] || benchcases=$(find "$__base_dir/benchcases" -mindepth 1 -maxdepth 1 -type d ! -name "\.*" -printf "%f\n")
 
+: ${output:=$__base_dir/output}
+
+echo "output: $output"
+exit
 # Exit if anything goes wrong
 set -e
 
@@ -87,8 +92,8 @@ profile_dir="$__base_dir/profiles/$profile"
 export device=$(cat "$profile_dir/device")
 export mount_point=$(cat "$profile_dir/mount_point")
 
-output_dir="$__base_dir/output/$profile"
-[ -d "$output_dir" ] || mkdir "$output_dir"
+output_dir="$output/$profile"
+[ -d "$output_dir" ] || mkdir -p "$output_dir"
 
 benchmark_script="$__base_dir/benchmarks/$benchmark"
 [ -e "$benchmark_script" ] || die "$benchmark_script does not exist"
