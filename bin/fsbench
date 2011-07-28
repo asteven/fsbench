@@ -1,11 +1,11 @@
 #!/bin/sh
 
-export __pwd=$(pwd -P)
+export __pwd="$(pwd -P)"
 export __mydir=${0%/*}
-export __mydir_abs=$(cd "$__mydir" && pwd -P)
+export __mydir_abs="$(cd "$__mydir" && pwd -P)"
 export __myname=${0##*/}
 export __myname_abs=$__mydir_abs/$__myname
-export __base_dir=$(cd "$__mydir/../" && pwd -P)
+export __base_dir="$(cd "$__mydir/../" && pwd -P)"
 
 usage() {
    cat << EOS 1>&2
@@ -80,14 +80,14 @@ done
 
 # All remaining arguments are benchcases
 benchcases=$@
-[ -n "$benchcases" ] || benchcases=$(find "$__base_dir/benchcases" -mindepth 1 -maxdepth 1 -type d ! -name "\.*" -printf "%f\n")
+[ -n "$benchcases" ] || benchcases="$(find "$__base_dir/benchcases" -mindepth 1 -maxdepth 1 -type d ! -name "\.*" -printf "%f\n")"
 
 : ${output:=$__base_dir/output}
 
 # Exit if anything goes wrong
 set -e
 
-fstab_backup=$(mktemp)
+fstab_backup="$(mktemp)"
 cp /etc/fstab "$fstab_backup"
 trap restore_fstab EXIT 
 restore_fstab() {
@@ -96,8 +96,8 @@ restore_fstab() {
 
 profile_dir=$__base_dir/profiles/$profile
 [ -d "$profile_dir" ] || die "Profile directory does not exist: $profile_dir"
-export device=$(cat "$profile_dir/device")
-export mount_point=$(cat "$profile_dir/mount_point")
+export device="$(cat "$profile_dir/device")"
+export mount_point="$(cat "$profile_dir/mount_point")"
 [ -x "$profile_dir/setup" ] && "$profile_dir/setup" || true
 
 output_dir=$output/$profile
@@ -117,7 +117,7 @@ for benchcase in $benchcases; do
    # setup
    [ -x "$benchcase_dir/setup" ] && "$benchcase_dir/setup" || true
    # add fstab entry
-   export mount_options=$(cat "$benchcase_dir/mount_options")
+   export mount_options="$(cat "$benchcase_dir/mount_options")"
    fstab_entry="$device $mount_point $mount_options 0 0 # fsbench"
    echo "$fstab_entry" >> /etc/fstab
    # mount
