@@ -87,7 +87,7 @@ benchcases=$@
 # Exit if anything goes wrong
 set -e
 
-fstab_backup="$(mktemp "/tmp/fsbench.XXXXXXXXXXXX")"
+fstab_backup="$(mktemp "/tmp/fsbench.fstab.XXXXXXXXXXXX")"
 cp /etc/fstab "$fstab_backup"
 trap restore_fstab EXIT 
 restore_fstab() {
