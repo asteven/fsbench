@@ -3,9 +3,9 @@
 export __pwd=$(pwd -P)
 export __mydir=${0%/*}
 export __mydir_abs=$(cd "$__mydir" && pwd -P)
-export __myname="${0##*/}"
-export __myname_abs="$__mydir_abs/$__myname"
-export __base_dir="$(cd "$__mydir/../" && pwd -P)"
+export __myname=${0##*/}
+export __myname_abs=$__mydir_abs/$__myname
+export __base_dir=$(cd "$__mydir/../" && pwd -P)
 
 usage() {
    cat << EOS 1>&2
@@ -51,15 +51,15 @@ while [ $# -gt 0 ]; do
          exit 0
       ;;
       -p|--profile)
-         profile="$2"
+         profile=$2
          shift 2
       ;;
       -b|--benchmark)
-         benchmark="$2"
+         benchmark=$2
          shift 2
       ;;
       -o|--output)
-         output="$2"
+         output=$2
          shift 2
       ;;
    esac
@@ -68,7 +68,7 @@ done
 [ $debug ] && set -x
 
 # All remaining arguments are benchcases
-benchcases="$@"
+benchcases=$@
 [ -n "$benchcases" ] || benchcases=$(find "$__base_dir/benchcases" -mindepth 1 -maxdepth 1 -type d ! -name "\.*" -printf "%f\n")
 
 : ${output:=$__base_dir/output}
@@ -86,16 +86,16 @@ restore_fstab() {
 }
 
 exit
-profile_dir="$__base_dir/profiles/$profile"
+profile_dir=$__base_dir/profiles/$profile
 [ -x "$profile_dir/setup" ] && "$profile_dir/setup" || true
 
 export device=$(cat "$profile_dir/device")
 export mount_point=$(cat "$profile_dir/mount_point")
 
-output_dir="$output/$profile"
+output_dir=$output/$profile
 [ -d "$output_dir" ] || mkdir -p "$output_dir"
 
-benchmark_script="$__base_dir/benchmarks/$benchmark"
+benchmark_script=$__base_dir/benchmarks/$benchmark
 [ -e "$benchmark_script" ] || die "$benchmark_script does not exist"
 [ -x "$benchmark_script" ] || die "$benchmark_script is not executable"
 
@@ -105,19 +105,19 @@ for benchcase in $benchcases; do
    echo "benchcase: $benchcase"
    export benchcase
 
-   benchcase_dir="$__base_dir/benchcases/$benchcase"
+   benchcase_dir=$__base_dir/benchcases/$benchcase
 
    # setup
    [ -x "$benchcase_dir/setup" ] && "$benchcase_dir/setup" || true
    # add fstab entry
-   export mount_options="$(cat "$benchcase_dir/mount_options")"
+   export mount_options=$(cat "$benchcase_dir/mount_options")
    fstab_entry="$device $mount_point $mount_options 0 0 # fsbench"
    echo "$fstab_entry" >> /etc/fstab
    # mount
    mount "$mount_point"
    # run benchmark
    suffix=`date +%Y%m%dT%H%M%S`
-   export output_file="$output_dir/$benchmark.$benchcase.$suffix"
+   export output_file=$output_dir/$benchmark.$benchcase.$suffix
    $benchmark_script > "$output_file"
    # umount
    umount "$mount_point"
