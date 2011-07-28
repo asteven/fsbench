@@ -1,0 +1,34 @@
+== basic operation ==
+run setup
+foreach benchmark
+do
+  run setup
+  add fstab entry
+  mount
+  run benchmark
+  umount
+  remove fstab entry
+  run teardown
+one
+run teardown
+
+
+== directory layout ==
+profiles/            # directory holding different profiles
+   $profile/
+      setup          # script to prepare the machine for the benchmark
+      device         # file containing a path to the block device used for benchmarking
+      mount_point    # file containing a path to the mount_point
+      teardown       # script to cleanup
+benchmarks/          # directory holding different benchmarks
+   $benchmark        # script containing the benchmark to run, should write to stdout
+benchcases/          # directory holding different test cases (benchcases)
+   $benchcase/
+      setup          # benchcase specific setup script, e.g. format filesystem
+      mount_options  # mount_options, including file system, e.g. 'jfs noatime,whatever'
+      teardown       # benchcase specific cleanup script
+output/              # directory where benchmark reports are written to
+   $profile/
+      $benchmark.$benchcase.$timestamp
+
+

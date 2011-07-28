@@ -1,0 +1,4 @@
+#!/bin/sh
+lvremove -f system/export_journal
+lvcreate -nexport_journal -L132M system
+mkfs.jfs -q -j /dev/mapper/system-export_journal "$device"

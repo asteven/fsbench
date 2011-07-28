@@ -1,0 +1,8 @@
+#!/bin/sh
+#echo "benchcase: $benchcase"
+#echo "device: $device"
+#echo "mount_point: $mount_point"
+#echo "mount_options: $mount_options"
+#echo "output_file: $output_file"
+
+iozone -a -z -+u -g 4G -U "$mount_point" -f "$mount_point/iozone.test"

@@ -1,0 +1,3 @@
+#!/bin/sh
+echo "mount_point: $mount_point"
+#mkdir -p "$mount_point"

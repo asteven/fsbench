@@ -1,0 +1,14 @@
+#!/bin/sh
+#echo "benchcase: $benchcase"
+#echo "device: $device"
+#echo "mount_point: $mount_point"
+#echo "mount_options: $mount_options"
+#echo "output_file: $output_file"
+
+echo 0 > /proc/sys/kernel/randomize_va_space
+filebench << DONE
+load fileserver
+set \$dir=$mount_point
+set \$meanfilesize=50000000
+run 60
+DONE
