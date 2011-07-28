@@ -73,8 +73,6 @@ benchcases=$@
 
 : ${output:=$__base_dir/output}
 
-echo "output: $output"
-exit
 # Exit if anything goes wrong
 set -e
 
