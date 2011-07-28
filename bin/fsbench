@@ -87,11 +87,12 @@ benchcases=$@
 # Exit if anything goes wrong
 set -e
 
-fstab_backup="$(mktemp)"
+fstab_backup="$(mktemp "/tmp/fsbench.XXXXXXXXXXXX")"
 cp /etc/fstab "$fstab_backup"
 trap restore_fstab EXIT 
 restore_fstab() {
    cp "$fstab_backup" /etc/fstab
+   rm -f "$fstab_backup"
 }
 
 profile_dir=$__base_dir/profiles/$profile
