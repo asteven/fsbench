@@ -32,3 +32,17 @@ output/              # directory where benchmark reports are written to
       $benchmark.$benchcase.$timestamp
 
 
+== getting started ==
+cp -a profiles/cbrg-fs profiles/test
+echo /dev/sda3 > profiles/test/device
+echo /mnt/test > profiles/test/mount_point
+cat > profiles/test/setup << DONE
+#!/bin/sh
+mkdir -p "$mount_point"
+DONE
+chmod +x profiles/test/setup
+
+WARNING: /dev/sda3 will be formatted!
+./bin/fsbench --profile test --benchmark filebench --output /tmp/fsbench jfs &
+tail -F /tmp/fsbench/test/filebench.jfs.*
+
