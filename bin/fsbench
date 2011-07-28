@@ -62,8 +62,15 @@ while [ $# -gt 0 ]; do
          output=$2
          shift 2
       ;;
+      -*)
+         die "Unkown argument: $1"
+      ;;
    esac
 done
+
+# Check for required arguments
+[ -n "$profile" ] || die "Missing required argument: --profile"
+[ -n "$benchmark" ] || die "Missing required argument: --benchmark"
 
 [ $debug ] && set -x
 
@@ -83,8 +90,8 @@ restore_fstab() {
    cp "$fstab_backup" /etc/fstab
 }
 
-exit
 profile_dir=$__base_dir/profiles/$profile
+[ -d "$profile_dir" ] || die "Profile directory does not exist: $profile_dir"
 [ -x "$profile_dir/setup" ] && "$profile_dir/setup" || true
 
 export device=$(cat "$profile_dir/device")
@@ -94,13 +101,12 @@ output_dir=$output/$profile
 [ -d "$output_dir" ] || mkdir -p "$output_dir"
 
 benchmark_script=$__base_dir/benchmarks/$benchmark
-[ -e "$benchmark_script" ] || die "$benchmark_script does not exist"
-[ -x "$benchmark_script" ] || die "$benchmark_script is not executable"
+[ -e "$benchmark_script" ] || die "Benchmark script does not exist: $benchmark_script"
+[ -x "$benchmark_script" ] || die "Benchmark script is not executable: $benchmark_script"
 
 umount "$mount_point" || true
 
 for benchcase in $benchcases; do
-   echo "benchcase: $benchcase"
    export benchcase
 
    benchcase_dir=$__base_dir/benchcases/$benchcase
